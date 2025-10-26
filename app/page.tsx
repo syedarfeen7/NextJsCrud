@@ -1,5 +1,10 @@
-import Image from "next/image";
+import Counter from "./components/Counter";
 
 export default function Home() {
-  return <div>Home Page</div>;
+  return (
+    <div>
+      <h1 className="text-3xl font-bold">Welcome to Next.js</h1>
+      <Counter />
+    </div>
+  );
 }
