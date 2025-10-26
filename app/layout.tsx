@@ -25,29 +25,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <header>
-          <nav
-            className="p-4 shadow-md flex items-center justify-between"
-            style={{ backgroundColor: "#f0f0f0" }}
-          >
-            <h1 className="text-2xl font-bold">My App</h1>
-            <ul className="flex space-x-4">
-              <li>
-                <Link href={"/"}>Home</Link>
-              </li>
-              <li>
-                <Link href={"/about"}>About</Link>
-              </li>
-              <li>
-                <Link href={"/"}>Contact</Link>
-              </li>
-            </ul>
-          </nav>
-        </header>
-        {children}
+      <body className="bg-gray-100">
+        <nav className="p-4 bg-white shadow-md flex gap-4">
+          <Link href="/" className="text-blue-500">
+            Home
+          </Link>
+          <Link href="/about" className="text-blue-500">
+            About
+          </Link>
+        </nav>
+        <main className="p-10">{children}</main>
       </body>
     </html>
   );
