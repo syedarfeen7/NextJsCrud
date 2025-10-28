@@ -21,10 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-gray-50 text-gray-900 min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-gray-50 text-gray-900 min-h-screen flex items-center justify-center`}
       >
-        <main className="container mx-auto py-8 px-4">
-          <div className="flex flex-col items-center">{children}</div>
+        <main className="w-full max-w-5xl mx-auto p-6 flex flex-col items-center justify-center rounded-xl shadow bg-white">
+          {children}
         </main>
       </body>
     </html>
