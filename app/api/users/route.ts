@@ -57,3 +57,18 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    console.log("📩 [GET] /api/users request received");
+    await connectDB();
+    const users = await User.find();
+    return NextResponse.json(users, { status: 200 });
+  } catch (error: any) {
+    console.error("Error fetching users:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch users", details: error.message },
+      { status: 500 }
+    );
+  }
+}
