@@ -10,6 +10,7 @@ interface InputFieldProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
+  className?: string;
 }
 
 export default function InputField({
@@ -20,13 +21,14 @@ export default function InputField({
   value,
   onChange,
   error,
+  className,
 }: InputFieldProps) {
   return (
     <div className="flex flex-col gap-1 w-full">
       {label && (
         <label
           htmlFor={name}
-          className="text-sm font-semibold text-gray-700 tracking-wide"
+          className={`text-sm font-semibold text-gray-700 tracking-wide ${className}`}
         >
           {label}
         </label>
