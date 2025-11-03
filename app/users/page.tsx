@@ -5,6 +5,7 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { User } from "@/types/user";
 import Button from "@/components/Button";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
 
 const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -29,37 +30,32 @@ const Users = () => {
 
   const deleteUser = async (id: string) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
-
+    setLoading(true);
     try {
       await axios.delete(`/api/users/${id}`);
 
       setUsers(users.filter((user) => user._id !== id));
     } catch (error) {
       console.error("Error deleting user:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading)
-    return (
-      <div className="min-h-screen flex items-center justify-center text-gray-300">
-        Loading...
-      </div>
-    );
+  if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white p-8">
-      <h1 className="text-3xl font-bold mb-6 text-center">Users List</h1>
+    <div className="min-h-screen  text-white p-8 flex flex-col items-center justify-center">
+      <h1 className="text-3xl font-bold mb-5 text-center">Users List</h1>
+      {users.length === 0 && !loading && (
+        <div className="text-center text-gray-400 mb-5">No users found.</div>
+      )}
+      <div className=" mb-6 flex justify-end">
+        <Button label="➕ Add User" onClick={() => router.push("/add-user")} />
+      </div>
 
-      {users.length === 0 ? (
-        <div className="text-center text-gray-400">No users found.</div>
-      ) : (
+      {users.length > 0 && (
         <div className="overflow-x-auto">
-          <div className=" mb-6 flex justify-end">
-            <Button
-              label="➕ Add User"
-              onClick={() => router.push("/add-user")}
-            />
-          </div>
           <table className="min-w-full border border-gray-700 rounded-lg overflow-hidden">
             <thead className="bg-[#1e1e1e] text-gray-300">
               <tr>
