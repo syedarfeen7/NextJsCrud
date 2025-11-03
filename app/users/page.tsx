@@ -27,6 +27,18 @@ const Users = () => {
     fetchUsers();
   }, []);
 
+  const deleteUser = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this user?")) return;
+
+    try {
+      await axios.delete(`/api/users/${id}`);
+
+      setUsers(users.filter((user) => user._id !== id));
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
+
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-300">
@@ -92,6 +104,7 @@ const Users = () => {
                       className="text-red-500 hover:text-red-400 cursor-pointer"
                       size={20}
                       title="Delete"
+                      onClick={() => deleteUser(user._id!)}
                     />
                   </td>
                 </tr>
