@@ -4,7 +4,7 @@ import User from "@/models/User";
 
 export async function POST(req: Request) {
   try {
-    console.log("📩 [POST] /api/users request received");
+    console.log("[POST] /api/users request received");
 
     const formData = await req.formData();
 
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    console.log("📩 [GET] /api/users request received");
+    console.log("[GET] /api/users request received");
     await connectDB();
     const users = await User.find();
     return NextResponse.json(users, { status: 200 });

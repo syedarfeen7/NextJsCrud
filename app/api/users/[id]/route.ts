@@ -63,3 +63,65 @@ export async function GET(
     );
   }
 }
+export async function PUT(req: Request) {
+  try {
+    console.log("[PUT] /api/users request received");
+
+    const formData = await req.formData();
+
+    const firstName = formData.get("firstName");
+    const lastName = formData.get("lastName");
+    const email = formData.get("email");
+    const phoneNumber = formData.get("phoneNumber");
+    const imageFile = formData.get("image") as File | null;
+
+    if (!firstName || !lastName || !email) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // Handle local file upload
+    let imagePath = null;
+    if (imageFile) {
+      const buffer = Buffer.from(await imageFile.arrayBuffer());
+      const fileName = `${Date.now()}-${imageFile.name}`;
+      const fs = require("fs");
+      const path = require("path");
+      const uploadDir = path.join(process.cwd(), "public/uploads");
+
+      if (!fs.existsSync(uploadDir))
+        fs.mkdirSync(uploadDir, { recursive: true });
+
+      const filePath = path.join(uploadDir, fileName);
+      fs.writeFileSync(filePath, buffer);
+      imagePath = `/uploads/${fileName}`;
+    }
+
+    await connectDB();
+    const updatedUser = await User.findByIdAndUpdate(
+      formData.get("_id"),
+      {
+        firstName,
+        lastName,
+        email,
+        image: imagePath,
+        phoneNumber,
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(updatedUser, { status: 200 });
+  } catch (error: any) {
+    console.error("Error updating user:", error);
+    return NextResponse.json(
+      { error: "Failed to update user", details: error.message },
+      { status: 500 }
+    );
+  }
+}

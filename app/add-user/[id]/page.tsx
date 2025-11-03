@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import InputField from "@/components/InputField";
@@ -16,6 +16,32 @@ export default function AddUser() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const router = useRouter();
   const { id } = useParams();
+
+  console.log(">>> Params:", id);
+
+  useEffect(() => {
+    if (id === "create") return; // Skip fetching if creating a new user
+
+    fetchUser();
+  }, [id]);
+
+  const fetchUser = useCallback(async () => {
+    try {
+      const res = await axios.get(`/api/users/${id}`);
+      const user = res.data;
+
+      console.log(" >>> Fetched user data:", user);
+      setFormData({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        phoneNumber: user.phoneNumber || "",
+        image: user.image || "",
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  }, [id]);
 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,14 +62,25 @@ export default function AddUser() {
       form.append("phoneNumber", formData.phoneNumber);
       if (imageFile) form.append("image", imageFile);
 
+      if (id !== "create") {
+        if (id !== "create") form.append("_id", id);
+
+        // Update existing user
+        const res = await axios.put(`/api/users/${id}`, form);
+        if (res.status === 200) {
+          alert("User updated successfully!");
+          router.push("/");
+          return;
+        }
+      }
       const res = await axios.post("/api/users", form);
       if (res.status === 201) {
-        alert("✅ User added successfully!");
+        alert("User added successfully!");
         router.push("/");
       }
     } catch (error) {
       console.error(error);
-      alert("❌ Failed to add user");
+      alert("Failed to add user");
     }
   };
 
@@ -83,7 +120,7 @@ export default function AddUser() {
           label="Profile Image"
           type="file"
           name="image"
-          onChange={handleFileChange} // Handle the file change
+          onChange={handleFileChange}
           className="bg-transparent text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
         />
 
