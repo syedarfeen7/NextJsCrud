@@ -46,7 +46,7 @@ export default function Home() {
         transition={{ delay: 0.4, duration: 0.5 }}
         className="flex flex-wrap justify-center gap-4"
       >
-        <Button label="➕ Add User" onClick={() => router.push("/add-user")} />
+        <Button label="➕ Add User" onClick={() => router.push("/add-user/create")} />
         <Button label="👥 View Users" onClick={() => router.push("/users")} />
       </motion.div>
 

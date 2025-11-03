@@ -37,3 +37,29 @@ export async function DELETE(
     );
   }
 }
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await connectDB();
+    if (!params.id) {
+      return NextResponse.json(
+        { error: "User ID is required" },
+        { status: 400 }
+      );
+    }
+
+    console.log("[GET] /api/users/[id] request received for ID:", params.id);
+    const user = await User.findById(params.id);
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+    return NextResponse.json(user, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: "Failed to fetch user", details: error.message },
+      { status: 500 }
+    );
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import InputField from "@/components/InputField";
 import Button from "@/components/Button";
@@ -11,9 +11,11 @@ export default function AddUser() {
     lastName: "",
     email: "",
     phoneNumber: "",
+    image: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const router = useRouter();
+  const { id } = useParams();
 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -81,10 +83,14 @@ export default function AddUser() {
           label="Profile Image"
           type="file"
           name="image"
-          onChange={handleFileChange}
+          onChange={handleFileChange} // Handle the file change
           className="bg-transparent text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
         />
-        <Button label="Add User" type="submit" />
+
+        <Button
+          label={id === "create" ? "Add User" : "Update User"}
+          type="submit"
+        />
       </form>
     </div>
   );

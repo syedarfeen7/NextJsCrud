@@ -95,6 +95,7 @@ const Users = () => {
                       className="text-blue-500 hover:text-blue-400 cursor-pointer"
                       size={20}
                       title="Edit"
+                      onClick={() => router.push(`/add-user/${user._id}`)}
                     />
                     <FiTrash2
                       className="text-red-500 hover:text-red-400 cursor-pointer"
